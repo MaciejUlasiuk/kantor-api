@@ -3,14 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kantor Online - Kursy Walut</title>
+    <title>Kantor Online</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Aktualne Kursy Walut (NBP - Tabela A)</h1>
+    <h1>Kantor Online</h1>
 
+    <div class="auth-section">
+        <div id="authForms" class="forms-container">
+            <form id="registerForm" class="auth-form">
+                <h2>Rejestracja</h2>
+                <label for="regName">Nazwa (opcjonalnie):</label>
+                <input type="text" id="regName" name="name">
+                <label for="regEmail">Email:</label>
+                <input type="email" id="regEmail" name="email" required>
+                <label for="regPassword">Hasło:</label>
+                <input type="password" id="regPassword" name="password" required minlength="6">
+                <button type="submit">Zarejestruj</button>
+                <p id="registerMessage" class="message"></p>
+            </form>
+
+            <form id="loginForm" class="auth-form">
+                <h2>Logowanie</h2>
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" name="email" required>
+                <label for="loginPassword">Hasło:</label>
+                <input type="password" id="loginPassword" name="password" required>
+                <button type="submit">Zaloguj</button>
+                <p id="loginMessage" class="message"></p>
+            </form>
+        </div>
+
+        <div id="userInfo" class="user-info" style="display: none;">
+            <p>Witaj, <span id="userName"></span>!</p>
+            <button id="logoutButton">Wyloguj</button>
+        </div>
+    </div>
+
+
+    <h2>Aktualne Kursy Walut (NBP - Tabela A)</h2>
     <div id="loader" class="loader"></div>
-    <p id="errorMessage" class="error-message"></p>
+    <p id="ratesErrorMessage" class="error-message"></p> 
 
     <div class="rates-container">
         <div class="rates-header rate-row">
@@ -19,9 +52,15 @@
             <div class="rate-value">Kurs Średni (PLN)</div>
         </div>
         <div id="ratesBody">
-            
+           
         </div>
     </div>
+
+    <div class="protected-action" style="display: none; margin-top: 20px;">
+         <button id="fetchProfileButton">Pobierz mój profil (chronione)</button>
+         <p id="profileMessage" class="message"></p>
+    </div>
+
 
     <script src="script.js"></script>
 </body>
