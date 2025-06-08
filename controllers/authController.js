@@ -1,7 +1,15 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const users = []; 
 
+const generateToken = (id, email) => {
+    return jwt.sign(
+        { id, email }, 
+        process.env.JWT_SECRET, 
+        { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
+    );
+};
 
 const registerUser = async (req, res) => {
     const { email, password, name } = req.body; 
@@ -54,6 +62,43 @@ const registerUser = async (req, res) => {
     }
 };
 
+const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email i hasło są wymagane.' });
+    }
+
+    try {
+        const user = users.find(u => u.email === email);
+        if (!user) {
+            return res.status(401).json({ message: 'Nieprawidłowy email lub hasło.' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Nieprawidłowy email lub hasło.' });
+        }
+
+        const token = generateToken(user.id, user.email);
+
+        res.status(200).json({
+            message: 'Zalogowano pomyślnie.',
+            token: token,
+            user: { 
+                id: user.id,
+                name: user.name,
+                email: user.email
+            }
+        });
+
+    } catch (error) {
+        console.error('Błąd podczas logowania użytkownika:', error);
+        res.status(500).json({ message: 'Błąd podczas logowania użytkownika.' });
+    }
+};
+
 module.exports = {
     registerUser,
+    loginUser, 
 };
