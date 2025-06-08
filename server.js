@@ -8,6 +8,7 @@ const cors = require('cors');
 
 const currencyRoutes = require('./routes/currencyRoutes');
 const authRoutes = require('./routes/authRoutes')
+const transactionRoutes = require('./routes/transactionRoutes');
 
 const PORT = process.env.PORT || 3000;
 
@@ -22,6 +23,7 @@ app.get('/api-welcome', (req, res) => {
 
 app.use('/api', currencyRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/transactions', transactionRoutes);
 
 
 app.get('*', (req, res) => {
