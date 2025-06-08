@@ -244,6 +244,19 @@ hr {
 #ratesBody .rate-row:nth-child(even) { background-color: #f9f9f9; }
 #ratesBody .rate-row:hover { background-color: #ecf0f1; }
 
+.rate-flag {
+    flex: 0 0 50px; 
+    text-align: center;
+    padding-right: 10px;
+}
+.rate-flag img {
+    width: 32px; 
+    height: auto;
+    border: 1px solid #ccc; 
+}
+.rate-currency { flex: 2.5; text-align: left; } 
+.rate-code { flex: 1; text-align: center; }
+.rate-value { flex: 1.5; text-align: right; }
 
 .loader {
     border: 5px solid #f3f3f3;

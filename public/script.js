@@ -128,34 +128,65 @@ document.addEventListener('DOMContentLoaded', () => {
         ratesErrorMessageElement.style.display = 'none';
     };
 
-    const fetchAndDisplayRates = async () => {
+     const fetchAndDisplayRates = async () => {
         ratesLoader.style.display = 'block';
         clearRatesError();
         ratesBody.innerHTML = '';
         try {
             const response = await fetch(NBP_API_URL);
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ message: `Błąd serwera NBP: ${response.status}` }));
+                const errorData = await response.json().catch(() => ({ message: `Błąd serwera NBP lub REST Countries: ${response.status}` }));
                 throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
             }
-            const rates = await response.json();
+            const rates = await response.json(); 
             if (rates && rates.length > 0) {
+                const nbpCurrencyCodes = ['PLN', ...rates.map(r => r.code)];
+                availableCurrencies = [...new Set(nbpCurrencyCodes.filter(code => code.length === 3 && code !== 'XDR'))].sort();
+                if (authFormsContainer.style.display === 'none') { 
+                     populateCurrencySelects();
+                }
+
+
                 rates.forEach(rate => {
                     const rateRow = document.createElement('div');
                     rateRow.classList.add('rate-row');
-                    rateRow.innerHTML = `
-                        <div class="rate-currency">${rate.currency}</div>
-                        <div class="rate-code">${rate.code}</div>
-                        <div class="rate-value">${typeof rate.mid === 'number' ? rate.mid.toFixed(4) : 'N/A'}</div>
-                    `;
+
+                    const flagDiv = document.createElement('div');
+                    flagDiv.classList.add('rate-flag');
+                    if (rate.flagUrl) {
+                        const img = document.createElement('img');
+                        img.src = rate.flagUrl;
+                        img.alt = `Flaga dla ${rate.code}`;
+                        img.onerror = () => { img.style.display = 'none'; }; 
+                        flagDiv.appendChild(img);
+                    } else {
+                        flagDiv.textContent = '-'; 
+                    }
+
+                    const currencyDiv = document.createElement('div');
+                    currencyDiv.classList.add('rate-currency');
+                    currencyDiv.textContent = rate.currency;
+
+                    const codeDiv = document.createElement('div');
+                    codeDiv.classList.add('rate-code');
+                    codeDiv.textContent = rate.code;
+
+                    const midDiv = document.createElement('div');
+                    midDiv.classList.add('rate-value');
+                    midDiv.textContent = typeof rate.mid === 'number' ? rate.mid.toFixed(4) : 'N/A';
+
+                    rateRow.appendChild(flagDiv); 
+                    rateRow.appendChild(currencyDiv);
+                    rateRow.appendChild(codeDiv);
+                    rateRow.appendChild(midDiv);
                     ratesBody.appendChild(rateRow);
                 });
             } else {
                 displayRatesError('Brak dostępnych kursów walut.');
             }
         } catch (error) {
-            console.error('Błąd podczas pobierania kursów NBP:', error);
-            displayRatesError(`Nie udało się załadować kursów NBP: ${error.message}`);
+            console.error('Błąd podczas pobierania kursów NBP/flag:', error);
+            displayRatesError(`Nie udało się załadować kursów: ${error.message}`);
         } finally {
             ratesLoader.style.display = 'none';
         }
@@ -339,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentUserData = null;
         }
         
-        populateCurrencySelects();
+       // populateCurrencySelects();
         fetchAndDisplayRates();
         updateUIForAuthState();
     };
