@@ -9,25 +9,26 @@ body {
     align-items: center;
 }
 
-h1, h2 {
+h1, h2, h3 {
     text-align: center;
     color: #2c3e50;
 }
 h1 { margin-bottom: 20px;}
 h2 { margin-top: 30px; margin-bottom: 15px; }
+h3 { margin-top: 15px; margin-bottom: 10px; font-size: 1.2em; }
 
 
 .auth-section {
     width: 100%;
-    max-width: 800px; 
+    max-width: 800px;
     margin-bottom: 30px;
 }
 
 .forms-container {
     display: flex;
-    justify-content: space-around; 
-    flex-wrap: wrap; 
-    gap: 20px; 
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .auth-form {
@@ -35,8 +36,8 @@ h2 { margin-top: 30px; margin-bottom: 15px; }
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    width: calc(50% - 20px); 
-    min-width: 300px; 
+    width: calc(50% - 20px);
+    min-width: 300px;
     box-sizing: border-box;
 }
 
@@ -56,7 +57,7 @@ h2 { margin-top: 30px; margin-bottom: 15px; }
 .auth-form input[type="text"],
 .auth-form input[type="email"],
 .auth-form input[type="password"] {
-    width: calc(100% - 22px); 
+    width: calc(100% - 22px);
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ddd;
@@ -82,7 +83,7 @@ h2 { margin-top: 30px; margin-bottom: 15px; }
 .message {
     margin-top: 10px;
     font-size: 0.9em;
-    min-height: 1.2em; 
+    min-height: 1.2em;
 }
 .message.success { color: green; }
 .message.error { color: red; }
@@ -107,6 +108,32 @@ h2 { margin-top: 30px; margin-bottom: 15px; }
 }
 .user-info button:hover { background-color: #c0392b; }
 
+.user-balances {
+    margin-top: 15px;
+    text-align: left;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+.user-balances h3 {
+    margin-top: 0;
+    text-align: center;
+}
+#balancesList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#balancesList li {
+    padding: 5px 0;
+    border-bottom: 1px dashed #eee;
+}
+#balancesList li:last-child {
+    border-bottom: none;
+}
+
+
 hr {
     width: 80%;
     max-width: 800px;
@@ -116,16 +143,97 @@ hr {
     margin: 30px auto;
 }
 
+.exchange-section {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.exchange-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.exchange-form div {
+    display: flex;
+    flex-direction: column;
+}
+
+.exchange-form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.exchange-form select,
+.exchange-form input[type="number"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+.exchange-form button[type="submit"] {
+    background-color: #2ecc71;
+    color: white;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-top: 10px;
+}
+.exchange-form button[type="submit"]:hover {
+    background-color: #27ae60;
+}
+
+.transaction-history {
+    margin-top: 30px;
+}
+#transactionsList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#transactionsList li {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    border: 1px solid #eee;
+    font-size: 0.9em;
+}
+.transaction-list-header {
+    font-weight: bold;
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 4px 4px 0 0;
+}
+.transaction-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; 
+    gap: 10px;
+    align-items: center;
+}
+#transactionsList li .transaction-row div:nth-child(1) { font-size: 0.85em; color: #555;}
+#transactionsList li .transaction-row div:nth-child(3) { text-align: right; } 
+
+
 .rates-container {
     width: 80%;
     max-width: 700px;
-    margin: 0 auto 20px auto; 
+    margin: 0 auto 20px auto;
     box-shadow: 0 0 15px rgba(0,0,0,0.15);
     background-color: white;
     border-radius: 8px;
     overflow: hidden;
 }
-
 .rate-row { display: flex; padding: 12px 15px; border-bottom: 1px solid #e0e0e0; }
 .rate-row:last-child { border-bottom: none; }
 .rates-header { background-color: #3498db; color: white; font-weight: bold; }
@@ -149,7 +257,7 @@ hr {
 }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-.error-message { 
+.error-message {
     color: #e74c3c;
     text-align: center;
     width: 80%;

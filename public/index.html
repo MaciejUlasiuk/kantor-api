@@ -36,14 +36,50 @@
 
         <div id="userInfo" class="user-info" style="display: none;">
             <p>Witaj, <span id="userName"></span>!</p>
+            <div id="userBalances" class="user-balances">
+                <h3>Twoje Salda:</h3>
+                <ul id="balancesList"></ul>
+            </div>
             <button id="logoutButton">Wyloguj</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <div id="exchangeSection" class="exchange-section" style="display: none;">
+        <h2>Wymiana Walut</h2>
+        <form id="exchangeForm" class="exchange-form">
+            <div>
+                <label for="fromCurrency">Sprzedaj:</label>
+                <select id="fromCurrency" name="fromCurrency"></select>
+            </div>
+            <div>
+                <label for="amountToExchange">Kwota:</label>
+                <input type="number" id="amountToExchange" name="amount" step="0.01" required min="0.01">
+            </div>
+            <div>
+                <label for="toCurrency">Kup:</label>
+                <select id="toCurrency" name="toCurrency"></select>
+            </div>
+            <button type="submit">Wymień</button>
+            <p id="exchangeMessage" class="message"></p>
+        </form>
+
+        <div id="transactionHistory" class="transaction-history" style="display: none;">
+            <h3>Historia Transakcji:</h3>
+            <div class="transaction-list-header transaction-row">
+                <div>Data</div>
+                <div>Operacja</div>
+                <div>Kurs</div>
+            </div>
+            <ul id="transactionsList"></ul>
         </div>
     </div>
 
 
     <h2>Aktualne Kursy Walut (NBP - Tabela A)</h2>
-    <div id="loader" class="loader"></div>
-    <p id="ratesErrorMessage" class="error-message"></p> 
+    <div id="ratesLoader" class="loader"></div>
+    <p id="ratesErrorMessage" class="error-message"></p>
 
     <div class="rates-container">
         <div class="rates-header rate-row">
@@ -52,7 +88,6 @@
             <div class="rate-value">Kurs Średni (PLN)</div>
         </div>
         <div id="ratesBody">
-           
         </div>
     </div>
 
@@ -60,7 +95,6 @@
          <button id="fetchProfileButton">Pobierz mój profil (chronione)</button>
          <p id="profileMessage" class="message"></p>
     </div>
-
 
     <script src="script.js"></script>
 </body>
