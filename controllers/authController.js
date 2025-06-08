@@ -4,15 +4,20 @@ const jwt = require('jsonwebtoken');
 const users = []; 
 
 const generateToken = (id, email) => {
+    if (!process.env.JWT_SECRET) {
+        console.error("JWT is not defined.");
+        throw new Error("JWT is not defined..");
+    }
     return jwt.sign(
         { id, email }, 
         process.env.JWT_SECRET, 
-        { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
+        { expiresIn: process.env.JWT_EXPIRES_IN || '1h' } 
     );
 };
 
+
 const registerUser = async (req, res) => {
-    const { email, password, name } = req.body; 
+    const { email, password, name } = req.body;
 
     if (!email || !password) {
         return res.status(400).json({ message: 'Email i hasło są wymagane.' });
@@ -36,46 +41,54 @@ const registerUser = async (req, res) => {
 
         const newUser = {
             id: users.length > 0 ? users[users.length - 1].id + 1 : 1, 
-            name: name || email.split('@')[0],
+            name: name || email.split('@')[0], 
             email: email,
             password: hashedPassword, 
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            balances: {
+                PLN: 1000.00, 
+                USD: 0.00,
+                EUR: 0.00,
+                CHF: 0.00,
+            },
+            transactions: [] 
         };
 
         users.push(newUser);
-        //usun pozniej
-        console.log('Zarejestrowano nowego użytkownika:', newUser.email, 'Aktualna lista użytkowników:', users.map(u => u.email)); 
-
+        console.log('Zarejestrowano nowego użytkownika:', newUser.email, 'z saldami:', newUser.balances);
+        
         res.status(201).json({
             message: 'Użytkownik zarejestrowany pomyślnie.',
             user: {
                 id: newUser.id,
                 name: newUser.name,
                 email: newUser.email,
-                createdAt: newUser.createdAt
+                createdAt: newUser.createdAt,
+                balances: newUser.balances 
             }
         });
 
     } catch (error) {
         console.error('Błąd podczas rejestracji użytkownika:', error);
-        res.status(500).json({ message: 'Błąd podczas rejestracji użytkownika.' });
+        res.status(500).json({ message: 'Wystąpił błąd serwera podczas rejestracji.' });
     }
 };
 
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
-
     if (!email || !password) {
         return res.status(400).json({ message: 'Email i hasło są wymagane.' });
     }
 
     try {
         const user = users.find(u => u.email === email);
+
         if (!user) {
             return res.status(401).json({ message: 'Nieprawidłowy email lub hasło.' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
+
         if (!isMatch) {
             return res.status(401).json({ message: 'Nieprawidłowy email lub hasło.' });
         }
@@ -88,17 +101,19 @@ const loginUser = async (req, res) => {
             user: { 
                 id: user.id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                balances: user.balances 
             }
         });
 
     } catch (error) {
-        console.error('Błąd podczas logowania użytkownika:', error);
-        res.status(500).json({ message: 'Błąd podczas logowania użytkownika.' });
+        console.error('Błąd podczas logowania użytkownika (w bloku catch):', error);
+        res.status(500).json({ message: 'Wystąpił błąd serwera podczas logowania.' });
     }
 };
 
 module.exports = {
     registerUser,
-    loginUser, 
+    loginUser,
+    users 
 };
