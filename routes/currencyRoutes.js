@@ -1,7 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const nbpService = require('../services/nbpService');
-
+/**
+ * @swagger
+ * /api/rates:
+ *   get:
+ *     summary: Pobiera kursy walut.
+ *     tags: [Currency]
+ *     responses:
+ *       200:
+ *         description: Lista kursów.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Rate'
+ */
 router.get('/rates', async (req, res) => {
   try {
     const rates = await nbpService.fetchExchangeRates();

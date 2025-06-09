@@ -2,9 +2,121 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
+/**
+ * @swagger
+ * tags:
+ *   name: Authentication
+ *   description: Zarządzanie uwierzytelnianiem użytkowników
+ */
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Rejestruje nowego użytkownika
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterRequest'
+ *     responses:
+ *       201:
+ *         description: Użytkownik pomyślnie zarejestrowany
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RegisterResponse'
+ *       400:
+ *         description: Nieprawidłowe dane wejściowe
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       409:
+ *         description: Użytkownik o podanym emailu już istnieje
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Błąd serwera
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 router.post('/register', authController.registerUser);
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Loguje istniejącego użytkownika i zwraca token JWT
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginRequest'
+ *     responses:
+ *       200:
+ *         description: Pomyślnie zalogowano, token JWT w odpowiedzi
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LoginResponse'
+ *       400:
+ *         description: Brakujące dane (email lub hasło)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Nieprawidłowy email lub hasło
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Błąd serwera
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 router.post('/login', authController.loginUser);
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Pobiera dane zalogowanego użytkownika (podstawowe info z tokenu)
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Dane zalogowanego użytkownika (z tokenu)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 email:
+ *                   type: string
+ *                   format: email
+ *                   example: "user@example.com"
+ *       401:
+ *         description: Nieautoryzowany dostęp
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 router.get('/me', protect, (req, res) => {
     if (req.user) {
         res.status(200).json({
