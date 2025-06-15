@@ -87,36 +87,33 @@ router.post('/register', authController.registerUser);
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 router.post('/login', authController.loginUser);
-/**
- * @swagger
+/** @swagger
  * /api/auth/me:
- *   get:
- *     summary: Pobiera dane zalogowanego użytkownika (podstawowe info z tokenu)
+ *   get: { summary: Pobiera dane zalogowanego użytkownika, tags: [Authentication], security: [{"bearerAuth": []}], responses: { 200: { description: Dane zalogowanego użytkownika, content: { "application/json": { schema: { type: object, properties: { id: {type: "integer"}, email: {type: "string", format: "email"}}}}}}, 401: { $ref: "#/components/responses/Unauthorized" }}}
+ *   delete:
+ *     summary: Usuwa konto zalogowanego użytkownika
  *     tags: [Authentication]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Dane zalogowanego użytkownika (z tokenu)
+ *         description: Konto pomyślnie usunięte
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                   type: integer
- *                   example: 1
- *                 email:
+ *                 message:
  *                   type: string
- *                   format: email
- *                   example: "user@example.com"
+ *                   example: "Konto zostało pomyślnie usunięte."
  *       401:
- *         description: Nieautoryzowany dostęp
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
  */
+
 router.get('/me', protect, (req, res) => {
     if (req.user) {
         res.status(200).json({
@@ -128,5 +125,5 @@ router.get('/me', protect, (req, res) => {
         res.status(401).json({ message: 'Nieautoryzowany dostęp.' });
     }
 });
-
+router.delete('/me', protect, authController.deleteAccount);
 module.exports = router;
