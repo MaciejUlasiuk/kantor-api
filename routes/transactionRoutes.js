@@ -57,4 +57,53 @@ const { protect } = require('../middleware/authMiddleware');
  */
 router.post('/exchange', protect, transactionController.exchangeCurrency);
 
+/**
+ * @swagger
+ * /api/transactions/donate:
+ *   post:
+ *     summary: Przekazuje środki na cel charytatywny
+ *     tags: [Transactions]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currency
+ *               - amount
+ *             properties:
+ *               currency:
+ *                 type: string
+ *                 description: Kod waluty do przekazania.
+ *                 example: "PLN"
+ *               amount:
+ *                 type: number
+ *                 format: double
+ *                 description: Kwota do przekazania.
+ *                 example: 20.00
+ *     responses:
+ *       200:
+ *         description: Środki pomyślnie przekazane.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 donation:
+ *                   type: object # Można zdefiniować schemat Donation
+ *                 updatedBalances:
+ *                   $ref: '#/components/schemas/UserBalances'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.post('/donate', protect, transactionController.donateFunds);
 module.exports = router;

@@ -39,8 +39,18 @@
             <div id="userBalances" class="user-balances">
                 <h3>Twoje Salda:</h3>
                 <ul id="balancesList"></ul>
+                <div class="donation-controls">
+                    <input type="number" id="donationAmount" placeholder="Kwota" step="0.01" min="0.01">
+                    <select id="donationCurrency"></select>
+                    <button id="donateButton">Przekaż na cele charytatywne</button>
+                    <p id="donationMessage" class="message"></p>
+                </div>
             </div>
-            <button id="logoutButton">Wyloguj</button>
+            <div class="account-actions">
+                <button id="logoutButton">Wyloguj</button>
+                <button id="deleteAccountButton" class="danger-button">Usuń Konto</button>
+            </div>
+            <p id="deleteAccountMessage" class="message"></p>
         </div>
     </div>
 
@@ -70,20 +80,20 @@
             <div class="transaction-list-header transaction-row">
                 <div>Data</div>
                 <div>Operacja</div>
-                <div>Kurs</div>
+                <div>Kurs/Cel</div>
             </div>
             <ul id="transactionsList"></ul>
         </div>
     </div>
 
 
-    <h2>Aktualne Kursy Walut NBP</h2>
+    <h2>Aktualne Kursy Walut (NBP - Tabela A)</h2>
     <div id="ratesLoader" class="loader"></div>
     <p id="ratesErrorMessage" class="error-message"></p>
 
     <div class="rates-container">
         <div class="rates-header rate-row">
-            <div class="rate-flag">Flaga</div> 
+            <div class="rate-flag">Flaga</div>
             <div class="rate-currency">Waluta</div>
             <div class="rate-code">Kod</div>
             <div class="rate-value">Kurs Średni (PLN)</div>
